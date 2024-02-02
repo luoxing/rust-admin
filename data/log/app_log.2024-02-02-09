@@ -1,0 +1,5 @@
+[2m2024-02-02 17:04:16.485[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m Startingconfig is "app"
+[2m2024-02-02 17:04:16.487[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m listening on 0.0.0.0:3000
+[2m2024-02-02 17:11:49.665[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m Startingconfig is "app"
+[2m2024-02-02 17:11:49.667[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m listening on 0.0.0.0:3000
+[2m2024-02-02 17:11:51.514[0m [32m INFO[0m ThreadId(13) [2mrust_admin[0m[2m:[0m Received termination signal shutting down

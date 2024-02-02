@@ -1,0 +1,14 @@
+#切换配置文件
+profiles:
+  active: dev
+app_name: app
+log:
+  level: TRACE #TRACE DEBUG INFO WARN ERROR
+  path: data/log
+  name: app_log
+server:
+  address: 0.0.0.0
+  port: 3000
+  tls: true
+  pem_cert_path: resource/cert/cert.pem
+  pem_key_path: resource/cert/key.pem
