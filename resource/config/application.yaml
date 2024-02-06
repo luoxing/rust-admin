@@ -12,3 +12,10 @@ server:
   tls: true
   pem_cert_path: resource/cert/cert.pem
   pem_key_path: resource/cert/key.pem
+db:
+  url: sqlite://resource/db/sqlite.db
+  # url: mysql://root:123456@localhost:3306/test
+  # url: postgres://postgres:123456@localhost:5432/postgres
+  # url: jdbc:sqlserver://localhost:1433;User=SA;Password={TestPass!123456};Database=test
+  pool_size: 16
+  pool_timeout: 30

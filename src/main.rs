@@ -2,18 +2,31 @@ use axum::{routing::get, Router};
 use axum_server::{tls_rustls::RustlsConfig, Handle};
 use tokio::signal;
 use std::{net::SocketAddr, time::Duration};
-mod config;
-mod log;
-mod context;
-use config::CFG;
+
+
 
 #[macro_use]
 extern crate tracing;
+use rbatis::rbdc::datetime::DateTime;
+
+#[macro_use]
+extern crate rbatis;
+
+mod config;
+mod log;
+mod context;
+mod domain;
+mod middleware;
+use config::CFG;
+use context::RB;
 
 #[tokio::main]
 async fn main() {
     let _guard = log::init_log();
     info!("Startingconfig is {:?}", &CFG.app_name);
+
+    context::db_init().await;
+    domain::tables::sync_tables(&RB).await;
 
     // configure certificate and private key used by https
     let config = RustlsConfig::from_pem_file(&CFG.server.pem_cert_path, &CFG.server.pem_key_path)

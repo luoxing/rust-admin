@@ -24,5 +24,13 @@
         ".\\Cargo.toml",
         ".\\Cargo.toml"
     ],
-    "rust-analyzer.showUnlinkedFileNotification": false // 这里可以选择默认的终端
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:rust-admin}/resource/db/sqlite.db",
+            "name": "sqlite"
+        }
+    ] // 这里可以选择默认的终端
 }

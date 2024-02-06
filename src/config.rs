@@ -16,6 +16,7 @@ pub struct Config {
     pub app_name: String,
     pub server: Server,
     pub log: Log,
+    pub db: DB,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
@@ -37,6 +38,13 @@ pub struct Log {
     pub level: String,
     pub path: String,
     pub name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct DB {
+    pub url: String,
+    pub pool_size: u16,
+    pub pool_timeout: u16,
 }
 
 impl Config {
