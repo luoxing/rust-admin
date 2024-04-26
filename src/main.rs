@@ -1,39 +1,57 @@
+use axum::extract::State;
 use axum::{routing::get, Router};
 use axum_server::{tls_rustls::RustlsConfig, Handle};
+use casbin::function_map::key_match2;
+use sea_orm::*;
 use tokio::signal;
+use std::path::PathBuf;
 use std::{net::SocketAddr, time::Duration};
-
-
+use casbin::{CoreApi, DefaultModel, Enforcer};
+use casbin_adapter::SeaOrmAdapter;
 
 #[macro_use]
 extern crate tracing;
-use rbatis::rbdc::datetime::DateTime;
-
-#[macro_use]
-extern crate rbatis;
 
 mod config;
 mod log;
 mod context;
-mod domain;
 mod middleware;
 use config::CFG;
-use context::RB;
+use context::AppState;
+use context::db_init;
+use  middleware::CasbinAxumLayer;
 
 #[tokio::main]
 async fn main() {
     let _guard = log::init_log();
     info!("Startingconfig is {:?}", &CFG.app_name);
 
-    context::db_init().await;
-    domain::tables::sync_tables(&RB).await;
-
     // configure certificate and private key used by https
     let config = RustlsConfig::from_pem_file(&CFG.server.pem_cert_path, &CFG.server.pem_key_path)
         .await
         .unwrap();
 
-    let app = Router::new().route("/", get(handler));
+    // db
+    let conn =  db_init().await;
+
+    // casbin load
+    let m = DefaultModel::from_file(PathBuf::from(CFG.path.clone().unwrap()).join("casbin/rbac_model.conf")).await.unwrap();
+    let a = SeaOrmAdapter::new(conn.clone()).await.unwrap();
+    //let e = Enforcer::new(m, a).await.unwrap();\
+    let casbin_middleware = CasbinAxumLayer::new(m, a).await.unwrap();
+    casbin_middleware
+        .write()
+        .await
+        .get_role_manager()
+        .write()
+        .matching_fn(Some(key_match2), None);
+
+    let state = AppState { conn };
+
+    let app = Router::new()
+    .route("/", get(handler))
+    .with_state(state)
+    .layer(casbin_middleware);
 
     let handle = Handle::new();
 

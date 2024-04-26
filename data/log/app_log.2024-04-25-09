@@ -1,0 +1,5 @@
+[2m2024-04-25 17:58:52.840[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m Startingconfig is "app"
+[2m2024-04-25 17:58:52.846[0m [32m INFO[0m ThreadId(01) [2mrust_admin[0m[2m:[0m listening on 0.0.0.0:3000
+[2m2024-04-25 17:59:12.753[0m [32m INFO[0m ThreadId(06) [2mrust_admin[0m[2m:[0m Hello, World!
+[2m2024-04-25 17:59:16.937[0m [32m INFO[0m ThreadId(13) [2mrust_admin[0m[2m:[0m casbins:0
+[2m2024-04-25 17:59:53.488[0m [32m INFO[0m ThreadId(11) [2mrust_admin[0m[2m:[0m Received termination signal shutting down

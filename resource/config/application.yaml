@@ -3,7 +3,7 @@ profiles:
   active: dev
 app_name: app
 log:
-  level: TRACE #TRACE DEBUG INFO WARN ERROR
+  level: INFO #TRACE DEBUG INFO WARN ERROR
   path: data/log
   name: app_log
 server:
@@ -19,3 +19,5 @@ db:
   # url: jdbc:sqlserver://localhost:1433;User=SA;Password={TestPass!123456};Database=test
   pool_size: 16
   pool_timeout: 30
+  log: false
+  log_level: info

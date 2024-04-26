@@ -1,18 +1,29 @@
-use std::time::Duration;
+use std::{str::FromStr, time::Duration};
 
-use once_cell::sync::Lazy;
-use rbatis::RBatis;
+use log::{self, LevelFilter};
+
+use sea_orm::{ConnectOptions, Database, DatabaseConnection};
+
 use crate::config::CFG;
 
-/// CONTEXT is all of the service struct
-pub static RB: Lazy<RBatis> = Lazy::new(|| RBatis::new());
+#[derive(Clone)]
+pub struct AppState {
+   pub conn: DatabaseConnection,
+}
 
-pub async fn db_init() {
-    let driver = rbdc_sqlite::SqliteDriver {};
-    RB.link(driver, &CFG.db.url)
-        .await
-        .expect("[abs_admin] rbatis pool init fail!");
-    //RB.intercepts.push(Arc::new(SysTrashService::new()));
-    RB.get_pool().unwrap().set_max_open_conns(CFG.db.pool_size as u64).await;
-    RB.get_pool().unwrap().set_timeout(Some(Duration::from_secs(CFG.db.pool_timeout as u64))).await;
+pub async fn db_init() -> DatabaseConnection {
+    let mut opt = ConnectOptions::new(CFG.db.url.as_str());
+    opt.max_connections(100)
+    .min_connections(5)
+    .connect_timeout(Duration::from_secs(8))
+    .acquire_timeout(Duration::from_secs(8))
+    .idle_timeout(Duration::from_secs(8))
+    .max_lifetime(Duration::from_secs(8))
+    .sqlx_logging(CFG.db.log)
+    .sqlx_logging_level(LevelFilter::from_str(&CFG.db.log_level).unwrap())
+    .set_schema_search_path("my_schema"); // Setting default PostgreSQL schema
+
+    // Database::connect(opt).await.unwrap()
+    let db = Database::connect(opt).await.unwrap();
+    db
 }
