@@ -16,10 +16,11 @@ mod config;
 mod log;
 mod context;
 mod middleware;
-use config::CFG;
-use context::AppState;
-use context::db_init;
-use  middleware::CasbinAxumLayer;
+use crate::config::CFG;
+use crate::context::AppState;
+use crate::context::db_init;
+use crate::middleware::CasbinAxumLayer;
+use crate::config::CASBIN_MODEL;
 
 #[tokio::main]
 async fn main() {
@@ -35,9 +36,8 @@ async fn main() {
     let conn =  db_init().await;
 
     // casbin load
-    let m = DefaultModel::from_file(PathBuf::from(CFG.path.clone().unwrap()).join("casbin/rbac_model.conf")).await.unwrap();
+    let m = DefaultModel::from_str(CASBIN_MODEL).await.unwrap();
     let a = SeaOrmAdapter::new(conn.clone()).await.unwrap();
-    //let e = Enforcer::new(m, a).await.unwrap();\
     let casbin_middleware = CasbinAxumLayer::new(m, a).await.unwrap();
     casbin_middleware
         .write()
