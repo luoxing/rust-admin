@@ -4,7 +4,7 @@ use figment::{
 };
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::{ffi::{OsStr, OsString}, path::PathBuf, vec};
+use std::{ffi::OsString, path::PathBuf, vec};
 
 // casbin rbac model
 pub static CASBIN_MODEL: &str = "[request_definition]

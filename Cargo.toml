@@ -4,11 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = [".", "api", "casbin-adapter", "entity", "service"]
+members = [".", "casbin-adapter", "entity", "migration"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+entity ={ path = "entity"}
+casbin-adapter = { path = "casbin-adapter"}
+migration = { path = "migration"}
+
 axum = "0"
 axum-server = { version = "0.6", features = ["tls-rustls"] }
 hyper = { version = "0.14", features = ["full"] }
@@ -38,6 +42,6 @@ http-body = "1.0.0"
 http-body-util = "0.1.1"
 bytes = "1.1.0"
 futures = "0.3"
+jsonwebtoken = "9.3"
 
-entity ={ path = "entity"}
-casbin-adapter = { path = "casbin-adapter"}
+

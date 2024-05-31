@@ -16,16 +16,18 @@ mod config;
 mod log;
 mod context;
 mod middleware;
+mod constants;
+pub mod error;
+use crate::middleware::casbin::CasbinAxumLayer;
 use crate::config::CFG;
 use crate::context::AppState;
 use crate::context::db_init;
-use crate::middleware::CasbinAxumLayer;
 use crate::config::CASBIN_MODEL;
 
 #[tokio::main]
 async fn main() {
     let _guard = log::init_log();
-    info!("Startingconfig is {:?}", &CFG.app_name);
+    info!("Starting config is {:?}", &CFG.app_name);
 
     // configure certificate and private key used by https
     let config = RustlsConfig::from_pem_file(&CFG.server.pem_cert_path, &CFG.server.pem_key_path)
@@ -53,10 +55,11 @@ async fn main() {
     .with_state(state)
     .layer(casbin_middleware);
 
+    //Create a handle for our TLS server so the shutdown signal can all shutdown
     let handle = Handle::new();
-
     // Spawn a task to shutdown server.
     tokio::spawn(shutdown_signal(handle.clone()));
+
 
     let addr = SocketAddr::new(CFG.server.address.parse().unwrap(), CFG.server.port);
     info!("listening on {addr}");

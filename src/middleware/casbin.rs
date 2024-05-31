@@ -15,7 +15,7 @@ use std::{
 use tower::{Layer, Service};
 use tokio::sync::RwLock;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct CasbinVals {
     pub subject: String,
     pub domain: Option<String>,
